@@ -20,15 +20,22 @@ header {
   border-radius: 0;
   border-bottom: 10px solid black;
   padding: 60px;
+  margin-bottom: 2rem;
 }
 
 .description {
   white-space: pre-wrap;
+  flex-grow: 10;
 }
 
 .time-block {
-  text-align: center;
-  border-radius: 15px;
+  padding-right: 1rem;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  width: 100px;
+  border-top: 1px solid black;
+  border-right: 1px solid black;
 }
 
 .row {
@@ -37,6 +44,9 @@ header {
   border-top: 1px solid white;
   display: flex;
   flex-direction: row;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
 .hour {
@@ -66,6 +76,10 @@ header {
   border-bottom-right-radius: 15px;
   background-color: #06aed5;
   color: white;
+  width: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .saveBtn i:hover {
