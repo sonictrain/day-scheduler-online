@@ -23,9 +23,15 @@ let checks = {
     hours: 0,
 }
 
-let eventsObj = []
+// let eventsObj = []
 
-createTimeSlots();
+init();
+
+function init() {
+
+    readLocalStorage('Events');
+    createTimeSlots();
+}
 
 // Timed function to update date & time every second
 setInterval(() => {
@@ -119,6 +125,10 @@ function createTimeSlots() {
             description.addClass('past');
         }
 
+        if (eventsObj.find((x) => x.time === timeBlockLabel)) {
+            description.val(eventsObj.find((x) => x.time === timeBlockLabel).event);
+        }
+
         // create saveBtn
         let saveBtn = $('<div>').addClass('saveBtn');
         let saveIcon = $('<i>').addClass('far fa-save');
@@ -132,11 +142,11 @@ function createTimeSlots() {
 
                 eventsObj.push(
                     {
-                        hour: $(e.target).parent().siblings('.time-block').text(),
+                        time: $(e.target).parent().siblings('.time-block').text(),
                         event: $(e.target).parent().siblings('.description').val()
                     }
                 )
-                saveEvent(eventsObj);
+                saveEvent('Events', eventsObj);
 
             } else {
                 return;
@@ -152,4 +162,12 @@ function createTimeSlots() {
             .append(description)
             .append(saveBtn);
     }
+}
+
+function saveEvent(name, obj) {
+    localStorage.setItem(name, JSON.stringify(obj));
+}
+
+function readLocalStorage(name) {
+    return eventsObj = JSON.parse(localStorage.getItem(name)) || [];
 }
