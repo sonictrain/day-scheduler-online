@@ -125,9 +125,11 @@ function createTimeSlots() {
             description.addClass('past');
         }
 
-        if (eventsObj.find((x) => x.time === timeBlockLabel)) {
-            description.val(eventsObj.find((x) => x.time === timeBlockLabel).event);
-        }
+        let eventAtTime = eventsObj.find((x) => x.time === timeBlockLabel);
+
+        if (eventAtTime) {
+            description.val(eventAtTime.event);
+        };
 
         // create saveBtn
         let saveBtn = $('<div>').addClass('saveBtn');
@@ -137,19 +139,36 @@ function createTimeSlots() {
 
         saveIcon.on('click', (e) => {
 
-            // Return if input field is blank
+            console.log(description?.val());
+            // do nothing if input field is blank
             if (description.val()) {
 
-                eventsObj.push(
-                    {
-                        time: $(e.target).parent().siblings('.time-block').text(),
-                        event: $(e.target).parent().siblings('.description').val()
-                    }
-                )
+                eventAtTime = eventsObj.find((x) => x.time === timeBlockLabel);
+                console.log(eventAtTime?.event);
+
+                // if an event is already saved in eventsObj then update it
+                if (eventAtTime && eventAtTime.event  !== description.val()) {
+
+                    console.log('change detected - updating the object');
+                    eventsObj.find((x) => x.time === timeBlockLabel).event = description.val();
+                
+                // otherwise push it
+                } else {
+
+                    console.log(`pushing the object`);
+                    // otherwise push it
+                    eventsObj.push(
+                        {
+                            time: $(e.target).parent().siblings('.time-block').text(),
+                            event: $(e.target).parent().siblings('.description').val()
+                        }
+                    )
+                }
+
+                // update Local Storage obj and eventAtTime for future comparison
+                eventAtTime = eventsObj.find((x) => x.time === timeBlockLabel);
                 saveEvent('Events', eventsObj);
 
-            } else {
-                return;
             }
         });
 
@@ -169,5 +188,5 @@ function saveEvent(name, obj) {
 }
 
 function readLocalStorage(name) {
-    return eventsObj = JSON.parse(localStorage.getItem(name)) || [];
+    eventsObj = JSON.parse(localStorage.getItem(name)) || [];
 }
