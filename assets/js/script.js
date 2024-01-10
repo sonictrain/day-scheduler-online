@@ -133,29 +133,27 @@ function createTimeSlots() {
 
         // create saveBtn
         let saveBtn = $('<div>').addClass('saveBtn');
-        let saveIcon = $('<i>').addClass('far fa-save');
-
+        let saveIcon = $('<i>').addClass('fas fa-save');
         saveBtn.append(saveIcon);
 
-        saveIcon.on('click', (e) => {
+        // create trashBtn
+        let trashBtn = $('<div>').addClass('trashBtn');
+        let trashIcon = $('<i>').addClass('fas fa-trash');
+        trashBtn.append(trashIcon);
 
-            console.log(description?.val());
+        saveIcon.on('click', (e) => {
+            eventAtTime = eventsObj.find((x) => x.time === timeBlockLabel);
+
             // do nothing if input field is blank
             if (description.val()) {
+                if (eventAtTime?.event) {
+                    // if an event is already saved in eventsObj then update it
+                    if (eventAtTime.event !== description.val()) {
+                        eventsObj.find((x) => x.time === timeBlockLabel).event = description.val();
 
-                eventAtTime = eventsObj.find((x) => x.time === timeBlockLabel);
-                console.log(eventAtTime?.event);
-
-                // if an event is already saved in eventsObj then update it
-                if (eventAtTime && eventAtTime.event  !== description.val()) {
-
-                    console.log('change detected - updating the object');
-                    eventsObj.find((x) => x.time === timeBlockLabel).event = description.val();
-                
-                // otherwise push it
+                    }
+        
                 } else {
-
-                    console.log(`pushing the object`);
                     // otherwise push it
                     eventsObj.push(
                         {
@@ -172,6 +170,22 @@ function createTimeSlots() {
             }
         });
 
+        trashIcon.on('click', () => {
+            eventAtTime = eventsObj.find((x) => x.time === timeBlockLabel);
+
+            if (eventAtTime) {
+                
+                eventsObj = eventsObj.filter( (o) => {
+                    return o.time !== timeBlockLabel;
+                  });
+
+                description.val('');
+
+                saveEvent('Events', eventsObj);
+
+            }
+        })
+
         // append all the elements inside row, and append row inside container
         $(agendaContainer)
             .append(row);
@@ -179,7 +193,8 @@ function createTimeSlots() {
         $(row)
             .append(timeBlock)
             .append(description)
-            .append(saveBtn);
+            .append(saveBtn)
+            .append(trashBtn);
     }
 }
 
